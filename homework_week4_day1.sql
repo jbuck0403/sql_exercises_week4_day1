@@ -119,8 +119,9 @@ WITH rentals_above_250 AS (
     HAVING COUNT(1) > 250
 )
 
-SELECT COUNT(rental_rate)
+SELECT COUNT(rental_rate) -- num rental rates meeting parameters
 FROM rentals_above_250
+
 
 -- 10. Within the film table, how many rating categories are there? And what rating has the most
 -- movies total?
@@ -128,14 +129,10 @@ WITH movies_with_rating AS (
     SELECT rating, COUNT(rating) AS num_with_rating
     FROM film
     GROUP BY rating
-),
-individual_ratings AS (
-    SELECT DISTINCT rating
-    FROM film
 )
 
 SELECT rating, num_with_rating, (
-    SELECT COUNT(DISTINCT rating) FROM individual_ratings
+    SELECT COUNT(DISTINCT rating) FROM film
 ) AS total_rating_types
 FROM movies_with_rating
 WHERE num_with_rating = (SELECT MAX(num_with_rating) FROM movies_with_rating);
